@@ -1,12 +1,28 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { CharacterService } from './services/character';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [NgFor, NgIf],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('rick-morty-app');
+export class App implements OnInit {
+
+  characters:any[] = [];
+  loading = true;
+
+  constructor(private characterService: CharacterService){}
+
+  ngOnInit(){
+
+    this.characterService.getCharacters().subscribe((data:any)=>{
+      this.characters = data.results;
+      this.loading = false;
+    });
+
+  }
+
 }
